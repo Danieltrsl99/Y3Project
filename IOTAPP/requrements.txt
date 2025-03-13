@@ -1,0 +1,9 @@
+pip install flask 
+pip install scapy
+pip install pywifi
+pip install comtypes
+
+
+
+
+Instal Npcap ( did not work for me ), Instead you can use WinPcap
