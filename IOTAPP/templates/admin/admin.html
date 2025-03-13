@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Page{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Logged in as Admin</h1>
+    <div class="dropdown">
+        <button class="dropbtn">Select Option</button>
+        <div class="dropdown-content">
+            <a href="{{ url_for('view_activity') }}">Activity</a>
+            <a href="{{ url_for('view_access_log') }}">Access Log</a>
+            <a href="{{ url_for('view_users') }}">Users</a>
+        </div>
+    </div>
+    <div id="display-section">
+        {% if data %}
+            <table>
+                <thead>
+                    <tr>
+                        {% for column in columns %}
+                            <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            {% for item in row %}
+                                <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

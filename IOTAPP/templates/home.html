@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Hi</h1>
+    <form action="{{ url_for('scan_wifi') }}" method="post">
+        <button type="submit" class="btn">Scan for Wi-Fi Networks</button>
+    </form>
+    {% if networks %}
+        <h2>Nearby Wi-Fi Networks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>SSID</th>
+                    <th>BSSID</th>
+                    <th>Signal Strength</th>
+                    <th>Frequency</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for network in networks %}
+                    <tr>
+                        <td>{{ network.ssid }}</td>
+                        <td>{{ network.bssid }}</td>
+                        <td>{{ network.signal }}</td>
+                        <td>{{ network.frequency }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <form action="{{ url_for('scan_network') }}" method="post">
+        <button type="submit" class="btn">Scan Network for Smart Devices</button>
+    </form>
+    {% if devices %}
+        <h2>Smart Devices on Your Network</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>MAC Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                    <tr>
+                        <td>{{ device.ip }}</td>
+                        <td>{{ device.mac }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}
