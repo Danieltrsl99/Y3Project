@@ -6,7 +6,7 @@
 <div class="container">
     <h1>Welcome to SmartStuff</h1>
     <p>Create beautiful, customizable dashboards to monitor and control all your smart home devices in one central place.</p>
-    <a href="{{ url_for('register') }}" class="btn">Register</a>
-    <a href="{{ url_for('login') }}" class="btn">Login</a>
+    <a href="{{ url_for('auth.register') }}" class="btn">Register</a>
+    <a href="{{ url_for('auth.login') }}" class="btn">Login</a>
 </div>
 {% endblock %}

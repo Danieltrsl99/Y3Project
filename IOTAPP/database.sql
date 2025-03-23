@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS activity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     action TEXT NOT NULL,
+    page TEXT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     ip_address TEXT
 );

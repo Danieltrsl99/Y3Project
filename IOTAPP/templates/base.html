@@ -1,22 +1,24 @@
 <!-- website template look, nav bar across all pages, login/register/logout buttons + menu -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SmartStuff{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
-    {% block extra_styles %}{% endblock %}
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}SmartStuff{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+        {% block extra_styles %}{% endblock %}
+    </head>
 <body>
     <nav class="navbar">
-        <h1>SmartStuff</h1>
+        <a href="{{ url_for('home.home') }}" class="navbar-title">
+            <h1>SmartStuff</h1>
+        </a>
         <div class="nav-links">
             {% if 'user_id' in session %}
-                <a href="{{ url_for('logout') }}">Logout</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
             {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Register</a>
+                <a href="{{ url_for('auth.login') }}">Login</a>
+                <a href="{{ url_for('auth.register') }}">Register</a>
             {% endif %}
             <div class="dropdown">
                 <button class="dropbtn">&#9776;</button>

@@ -8,7 +8,6 @@ body {
 
 .navbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 1rem;
     background-color: #162447;
@@ -21,29 +20,35 @@ body {
 .navbar h1 {
     margin: 0;
     font-size: 1.5rem;
+    color: #ffffff;
+    margin-right: auto; /* Push the title to the far left */
 }
 
+/* Navbar buttons styling */
 .navbar .nav-links {
     display: flex;
     align-items: center;
+    gap: 5px; /* Space buttons 50px apart */
 }
 
 .navbar .nav-links a {
     color: #ffffff;
     text-decoration: none;
-    margin-left: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     transition: background-color 0.3s;
+    font-size: 1rem;
 }
 
 .navbar .nav-links a:hover {
     background-color: #1f4068;
 }
 
+/* Dropdown button styling */
 .navbar .dropdown {
     position: relative;
-    display: inline-block;
+    margin-left: 50px; /* 50px from the very left */
+    margin-right: 50px; /* Add 20px space from the right edge of the screen */
 }
 
 .navbar .dropdown .dropbtn {
@@ -108,4 +113,83 @@ body {
 
 .container .btn:hover {
     background-color: #162447;
+}
+
+/* Navbar title styling */
+.navbar-title {
+    text-decoration: none; /* Remove underline from the link */
+    color: #ffffff; /* White color for the title */
+    font-size: 1.5rem; /* Match the size of the original title */
+    font-weight: bold;
+    margin-right: auto; /* Push the title to the far left */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+}
+
+.navbar-title:hover {
+    color: #1f4068; /* Change color on hover */
+}
+
+/* FAQ Section Styling */
+.faq-section {
+    margin-bottom: 1rem;
+}
+
+.faq-toggle {
+    width: 100%;
+    background-color: #1f4068;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.faq-toggle:hover {
+    background-color: #162447;
+}
+
+.faq-content {
+    display: none;
+    padding: 1rem;
+    background-color: #162447;
+    color: white;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+}
+
+.faq-content p {
+    margin: 0;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .navbar .nav-links {
+        flex-wrap: wrap; /* Allow buttons to wrap if needed */
+        justify-content: flex-start; /* Align buttons to the left on mobile */
+        gap: 5px; /* Adjust spacing for mobile */
+        width: 100%;
+    }
+
+    .navbar .nav-links a {
+        flex: 1 1 auto; /* Allow buttons to resize equally */
+        text-align: center;
+    }
+
+    .navbar .dropdown {
+        position: static; /* Dropdown aligns naturally in the flow */
+        margin-top: 10px;
+    }
+
+    .navbar .dropdown .dropbtn {
+        font-size: 1.2rem; /* Slightly smaller font size for mobile */
+    }
 }

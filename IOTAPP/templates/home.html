@@ -3,13 +3,13 @@
 {% block title %}Home Page{% endblock %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <h1>Hi</h1>
-    <form action="{{ url_for('scan_wifi') }}" method="post">
+    <form action="{{ url_for('home.scan_wifi') }}" method="post">
         <button type="submit" class="btn">Scan for Wi-Fi Networks</button>
     </form>
     {% if networks %}
@@ -35,7 +35,7 @@
             </tbody>
         </table>
     {% endif %}
-    <form action="{{ url_for('scan_network') }}" method="post">
+    <form action="{{ url_for('home.scan_network') }}" method="post">
         <button type="submit" class="btn">Scan Network for Smart Devices</button>
     </form>
     {% if devices %}
