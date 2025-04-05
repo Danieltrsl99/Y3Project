@@ -14,6 +14,7 @@
             <form action="{{ url_for('home.scan_network') }}" method="post">
                 <button type="submit" class="dropdown-item">Scan Network for Smart Devices</button>
             </form>
+            <button class="dropdown-item" onclick="scanBluetoothDevices()">Scan for Bluetooth Devices</button>
         </div>
     </div>
     <div id="display-section">
@@ -60,5 +61,56 @@
             </table>
         {% endif %}
     </div>
+    <div id="bluetooth-results">
+        <h2>Bluetooth Devices</h2>
+        <ul id="device-list"></ul>
+    </div>
+    <button class="btn btn-primary" onclick="scanBluetoothDevices()">Scan for Bluetooth Devices</button>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        async function scanBluetoothDevices() {
+            console.log('Bluetooth scanning initiated...');
+            try {
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['battery_service']
+                });
+
+                console.log('Bluetooth device found:', device);
+
+                const deviceList = document.getElementById('device-list');
+                const listItem = document.createElement('li');
+                listItem.textContent = `Device Name: ${device.name || 'Unknown'}, ID: ${device.id}`;
+                deviceList.appendChild(listItem);
+
+                const response = await fetch('/log_bluetooth_device', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        device_name: device.name || 'Unknown',
+                        device_id: device.id
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to log Bluetooth device on the server.');
+                }
+
+                alert('Bluetooth device logged successfully!');
+            } catch (error) {
+                console.error('Error scanning for Bluetooth devices:', error);
+                alert('Bluetooth scanning failed. Please ensure Bluetooth is enabled and try again.');
+            }
+        }
+
+        // Attach the function to the global scope so it can be called from the button
+        window.scanBluetoothDevices = scanBluetoothDevices;
+    });
+</script>
 {% endblock %}

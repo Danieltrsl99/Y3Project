@@ -30,6 +30,14 @@ def log_page_access(username, page, ip_address):
     db.session.add(activity)
     db.session.commit()
 
+def log_bluetooth_device(username, device_name, device_id, ip_address):
+    """
+    Logs a Bluetooth device detected by the user.
+    """
+    activity = Activity(username=username, action=f"Detected Bluetooth Device: {device_name} (ID: {device_id})", ip_address=ip_address)
+    db.session.add(activity)
+    db.session.commit()
+
 def scan_wifi_networks():
     wifi = PyWiFi()
     interfaces = wifi.interfaces()

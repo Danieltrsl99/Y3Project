@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, session, redirect, url_for, flash, request
-from utils import scan_wifi_networks, scan_smart_devices, log_activity, get_public_ip
+from flask import Blueprint, render_template, session, redirect, url_for, flash, request, jsonify
+from utils import scan_wifi_networks, scan_smart_devices, log_activity, get_public_ip, log_bluetooth_device
 from models import User, db, Activity, AccessLog
 
 home_bp = Blueprint('home', __name__)
@@ -46,3 +46,15 @@ def scan_network():
     else:
         flash('You need to log in first.')
         return redirect(url_for('auth.login'))
+
+@home_bp.route('/log_bluetooth_device', methods=['POST'])
+def log_bluetooth_device_route():
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        data = request.get_json()
+        device_name = data.get('device_name')
+        device_id = data.get('device_id')
+        ip_address = get_public_ip()
+        log_bluetooth_device(user.username, device_name, device_id, ip_address)
+        return jsonify({'message': 'Bluetooth device logged successfully'}), 200
+    return jsonify({'error': 'Unauthorized'}), 401
