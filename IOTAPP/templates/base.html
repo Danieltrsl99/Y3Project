@@ -1,4 +1,3 @@
-<!-- website template look, nav bar across all pages, login/register/logout buttons + menu -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -10,7 +9,7 @@
     </head>
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('home.home') }}" class="navbar-title">
+        <a href="{{ url_for('home.index') }}" class="navbar-title">
             <h1>SmartStuff</h1>
         </a>
         <div class="nav-links">
@@ -24,9 +23,9 @@
                 <button class="dropbtn">&#9776;</button>
                 <div class="dropdown-content">
                     <!-- Add links to other pages here -->
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
+                    <a href="{{ url_for('home.index') }}">Home</a>
+                    <a href="#">Security Tips</a>
+                    <a href="#">FAQ</a>
                 </div>
             </div>
         </div>

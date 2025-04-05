@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash, request
-from models import User, Activity, AccessLog
+from models import User, Activity, AccessLog, db  # Import db here
 from utils import log_activity, get_public_ip
 
 admin_bp = Blueprint('admin', __name__)
@@ -65,11 +65,11 @@ def edit_user(user_id):
         if request.method == 'POST':
             user.username = request.form['username']
             user.email = request.form['email']
-            user.role = request.form['role']  # Update the role
+            user.role = request.form['role'] 
             db.session.commit()
             flash('User updated successfully.')
-            return redirect(url_for('admin.view_users'))  # Fixed blueprint prefix
-        return render_template('admin/edit_user.html', user=user)
+            return redirect(url_for('admin.view_users'))  
+        return render_template('admin/edit_users.html', user=user)
     else:
         flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))

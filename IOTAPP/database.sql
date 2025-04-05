@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS User (
 );
 
 -- adds admin and user for testing stuff
-INSERT INTO User (username, email, password, role) VALUES ('admin', 'admin@admin.com', '1', 'Admin');
-INSERT INTO User (username, email, password, role) VALUES ('user', 'user@user.com', '1', 'User');
+INSERT INTO User (username, email, password, role) VALUES ('admin', 'admin@admin.com', 'pbkdf2:sha256:1000000$ySCTlfy4eDSj826r$a375d2a73b62f3af9921cc218682f20f0c2208bb3a38f607a0c6b6daa9966e1a', 'Admin');
+INSERT INTO User (username, email, password, role) VALUES ('user', 'user@user.com', 'pbkdf2:sha256:1000000$ySCTlfy4eDSj826r$a375d2a73b62f3af9921cc218682f20f0c2208bb3a38f607a0c6b6daa9966e1a', 'User');
 
 -- activity table to monitor user login/logut actions
 CREATE TABLE IF NOT EXISTS activity (

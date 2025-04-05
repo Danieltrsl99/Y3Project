@@ -9,46 +9,44 @@ body {
 .navbar {
     display: flex;
     align-items: center;
-    padding: 1rem;
+
     background-color: #162447;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
+
+  
 }
 
 .navbar h1 {
     margin: 0;
-    font-size: 1.5rem;
+    margin-left: 10px;
     color: #ffffff;
-    margin-right: auto; /* Push the title to the far left */
+    margin-right: auto; 
 }
 
-/* Navbar buttons styling */
+
 .navbar .nav-links {
     display: flex;
     align-items: center;
-    gap: 5px; /* Space buttons 50px apart */
+    gap: 1px; 
 }
 
 .navbar .nav-links a {
     color: #ffffff;
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
     transition: background-color 0.3s;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .navbar .nav-links a:hover {
     background-color: #1f4068;
 }
 
-/* Dropdown button styling */
+
 .navbar .dropdown {
     position: relative;
-    margin-left: 50px; /* 50px from the very left */
-    margin-right: 50px; /* Add 20px space from the right edge of the screen */
+    margin-left: 50px; 
+    margin-right: 50px; 
 }
 
 .navbar .dropdown .dropbtn {
@@ -66,7 +64,7 @@ body {
     background-color: #1f4068;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+ 
 }
 
 .navbar .dropdown-content a {
@@ -85,9 +83,26 @@ body {
 }
 
 .container {
-    text-align: center;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
     padding: 2rem;
-    margin-top: 5rem; /* Adjust for fixed navbar */
+    margin-top: 5rem;
+    text-align: left; 
+}
+
+.container img {
+    margin-top: 5rem;
+    max-width: 50%;
+    height: 500px;
+    margin-right: 10rem; 
+}
+
+.container .btn-group {
+    text-align: center; 
+    flex-direction: column;
+    gap: 1rem; 
+    margin-left: 15rem;
 }
 
 .container h1 {
@@ -115,21 +130,20 @@ body {
     background-color: #162447;
 }
 
-/* Navbar title styling */
 .navbar-title {
-    text-decoration: none; /* Remove underline from the link */
-    color: #ffffff; /* White color for the title */
-    font-size: 1.5rem; /* Match the size of the original title */
+    text-decoration: none; 
+    color: #ffffff; 
+    font-size: 1rem; 
     font-weight: bold;
-    margin-right: auto; /* Push the title to the far left */
-    transition: color 0.3s; /* Smooth transition for hover effect */
+    margin-right: auto; 
+    transition: color 0.3s; 
 }
 
 .navbar-title:hover {
-    color: #1f4068; /* Change color on hover */
+    color: #1f4068; 
 }
 
-/* FAQ Section Styling */
+
 .faq-section {
     margin-bottom: 1rem;
 }
@@ -164,32 +178,198 @@ body {
     margin: 0;
 }
 
-/* Responsive design for mobile */
+
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
         align-items: flex-start;
-        padding: 1rem;
+   
     }
 
     .navbar .nav-links {
-        flex-wrap: wrap; /* Allow buttons to wrap if needed */
-        justify-content: flex-start; /* Align buttons to the left on mobile */
-        gap: 5px; /* Adjust spacing for mobile */
-        width: 100%;
+        flex-wrap: wrap; 
+        justify-content: flex-start; 
+        gap: 5px; 
+        
     }
 
     .navbar .nav-links a {
-        flex: 1 1 auto; /* Allow buttons to resize equally */
+        
         text-align: center;
     }
 
     .navbar .dropdown {
-        position: static; /* Dropdown aligns naturally in the flow */
-        margin-top: 10px;
+        position: static; 
+       
     }
 
     .navbar .dropdown .dropbtn {
-        font-size: 1.2rem; /* Slightly smaller font size for mobile */
+        font-size: 1.5rem;
     }
+}
+.container_home {
+    text-align: center;
+    padding: 2rem;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.dropbtn {
+    background-color: #1f4068;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #1f4068;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+    padding: 0;
+}
+
+.dropdown-content form {
+    margin: 0;
+}
+
+.dropdown-content .dropdown-item {
+    background: none;
+    color: white;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: .8rem;
+}
+
+.dropdown-content .dropdown-item:hover {
+    background-color: #162447;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #162447;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #162447;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #162447;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}
+
+table, th, td {
+    border: 1px solid #ffffff;
+}
+
+th, td {
+    padding: 0.5rem;
+    text-align: left;
+}
+
+th {
+    background-color: #1f4068;
+    color: #ffffff;
+}
+
+td {
+    background-color: #162447;
+    color: #ffffff;
+}
+
+.container_login {
+    background-color: #162447;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+    margin: 2rem auto; /* Center the form horizontally */
+}
+
+.container_login h1 {
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+}
+
+.container_login .form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.container_login label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.container_login input,
+.container_login select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.container_login button {
+    background-color: #1f4068;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.container_login button:hover {
+    background-color: #162447;
+}
+
+.container_login .btn-secondary {
+    background-color: #ccc;
+    color: #000;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.container_login .btn-secondary:hover {
+    background-color: #bbb;
 }
