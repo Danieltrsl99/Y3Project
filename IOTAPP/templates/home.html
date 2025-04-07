@@ -8,13 +8,9 @@
     <div class="dropdown">
         <button class="dropbtn">Select Option</button>
         <div class="dropdown-content">
-            <form action="{{ url_for('home.scan_wifi') }}" method="post">
-                <button type="submit" class="dropdown-item">Scan for Wi-Fi Networks</button>
-            </form>
-            <form action="{{ url_for('home.scan_network') }}" method="post">
-                <button type="submit" class="dropdown-item">Scan Network for Smart Devices</button>
-            </form>
+        
             <button class="dropdown-item" onclick="scanBluetoothDevices()">Scan for Bluetooth Devices</button>
+            <button class="dropdown-item" onclick="showDevices()">Bluetooth Devices</button>
         </div>
     </div>
     <div id="display-section">
@@ -41,31 +37,47 @@
                 </tbody>
             </table>
         {% endif %}
-        {% if devices %}
-            <h2>Smart Devices on Your Network</h2>
-            <table>
-                <thead>
+    </div>
+    <div id="smart-devices" style="display: none;">
+        <h2>Smart Devices on Your Network</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>MAC Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
                     <tr>
-                        <th>IP Address</th>
-                        <th>MAC Address</th>
+                        <td>{{ device.ip }}</td>
+                        <td>{{ device.mac }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for device in devices %}
-                        <tr>
-                            <td>{{ device.ip }}</td>
-                            <td>{{ device.mac }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+
+            
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    <div id="bluetooth-results">
+    <div id="bluetooth-results" style="display: none;">
         <h2>Bluetooth Devices</h2>
-        <ul id="device-list"></ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>Device Name</th>
+                    <th>Device ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                    <tr>
+                        <td>{{ device.device_name }}</td>
+                        <td>{{ device.device_id }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    <button class="btn btn-primary" onclick="scanBluetoothDevices()">Scan for Bluetooth Devices</button>
 </div>
 {% endblock %}
 
@@ -75,6 +87,18 @@
         async function scanBluetoothDevices() {
             console.log('Bluetooth scanning initiated...');
             try {
+                // Log the Bluetooth scan activity
+                const logResponse = await fetch('/log_bluetooth_scan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!logResponse.ok) {
+                    throw new Error('Failed to log Bluetooth scan activity.');
+                }
+
                 const device = await navigator.bluetooth.requestDevice({
                     acceptAllDevices: true,
                     optionalServices: ['battery_service']
@@ -82,11 +106,12 @@
 
                 console.log('Bluetooth device found:', device);
 
-                const deviceList = document.getElementById('device-list');
-                const listItem = document.createElement('li');
-                listItem.textContent = `Device Name: ${device.name || 'Unknown'}, ID: ${device.id}`;
-                deviceList.appendChild(listItem);
+                const deviceList = document.getElementById('bluetooth-results').querySelector('tbody');
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${device.name || 'Unknown'}</td><td>${device.id}</td>`;
+                deviceList.appendChild(row);
 
+                // Send the device data to the server
                 const response = await fetch('/log_bluetooth_device', {
                     method: 'POST',
                     headers: {
@@ -98,19 +123,26 @@
                     })
                 });
 
+                const result = await response.json();
                 if (!response.ok) {
-                    throw new Error('Failed to log Bluetooth device on the server.');
+                    throw new Error(result.error || 'Failed to log Bluetooth device on the server.');
                 }
 
-                alert('Bluetooth device logged successfully!');
+                alert(result.message);
             } catch (error) {
                 console.error('Error scanning for Bluetooth devices:', error);
                 alert('Bluetooth scanning failed. Please ensure Bluetooth is enabled and try again.');
             }
         }
 
-        // Attach the function to the global scope so it can be called from the button
+        function showDevices() {
+            const bluetoothResults = document.getElementById('bluetooth-results');
+            bluetoothResults.style.display = bluetoothResults.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Attach functions to the global scope so they can be called from the buttons
         window.scanBluetoothDevices = scanBluetoothDevices;
+        window.showDevices = showDevices;
     });
 </script>
 {% endblock %}

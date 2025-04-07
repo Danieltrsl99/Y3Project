@@ -11,19 +11,21 @@ from models import init_db
 from routes.auth_routes import auth_bp
 from routes.admin_routes import admin_bp
 from routes.home_routes import home_bp
+from routes.profile_routes import profile_bp
 
 app = Flask(__name__)
 app.secret_key = '123'
 
-# Initialize the database
+
 init_db(app)
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(home_bp)
+app.register_blueprint(profile_bp, url_prefix='/profile')
 
-# Make session available in templates
+
 @app.context_processor
 def inject_user():
     from flask import session

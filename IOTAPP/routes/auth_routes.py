@@ -49,7 +49,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username'].strip()
         password = request.form['password']
-        ip_address = get_public_ip()
+        ip_address = request.remote_addr
 
         # Validate inputs
         if not username or not password:
@@ -76,8 +76,14 @@ def login():
 
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
-        ip_address = request.remote_addr
-        log_page_access(user.username, 'Login', ip_address)
+        if user:  # Ensure user exists before logging page access
+            ip_address = request.remote_addr
+            log_page_access(user.username, 'Login', ip_address)
+        else:
+            # Clear invalid session and redirect to login
+            session.clear()
+            flash('Session is invalid. Please log in again.')
+            return redirect(url_for('auth.login'))
 
     return render_template('login.html')
 
@@ -90,4 +96,4 @@ def logout():
         log_page_access(user.username, 'Logout', ip_address)
         session.pop('user_id', None)
         session.pop('user_role', None)
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('home.index'))

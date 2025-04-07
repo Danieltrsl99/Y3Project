@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS User (
 INSERT INTO User (username, email, password, role) VALUES ('admin', 'admin@admin.com', 'pbkdf2:sha256:1000000$ySCTlfy4eDSj826r$a375d2a73b62f3af9921cc218682f20f0c2208bb3a38f607a0c6b6daa9966e1a', 'Admin');
 INSERT INTO User (username, email, password, role) VALUES ('user', 'user@user.com', 'pbkdf2:sha256:1000000$ySCTlfy4eDSj826r$a375d2a73b62f3af9921cc218682f20f0c2208bb3a38f607a0c6b6daa9966e1a', 'User');
 
--- activity table to monitor user login/logut actions
+-- activity table to monitor user login/logout actions
 CREATE TABLE IF NOT EXISTS activity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
@@ -21,10 +21,19 @@ CREATE TABLE IF NOT EXISTS activity (
     ip_address TEXT
 );
 
--- attempted login table to monitor for unscuccessful login attempts
+-- attempted login table to monitor for unsuccessful login attempts
 CREATE TABLE IF NOT EXISTS access_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     ip_address TEXT
+);
+
+-- user devices table to store connected Bluetooth devices
+CREATE TABLE IF NOT EXISTS UserDevices (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    device_name TEXT NOT NULL,
+    device_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
 );
