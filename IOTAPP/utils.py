@@ -2,6 +2,8 @@ import requests
 from scapy.all import ARP, Ether, srp
 from pywifi import PyWiFi
 from models import db, Activity, AccessLog
+import asyncio
+from bleak import BleakScanner
 
 def get_public_ip():
     try:

@@ -1,0 +1,254 @@
+
+{% extends "base.html" %}
+
+{% block title %}Welcome to SmartStuff{% endblock %}
+
+{% block content %}
+
+
+    <main id="main-container">
+        <!-- Main control panel -->
+        <section id="device-main-control">
+            <h2>Control Center</h2>
+            <button onclick="toggleDevice()" class="control-btn">Toggle Power</button>
+            <p id="device-status">Device is OFF</p>
+        </section>
+
+        <!-- Sliders for device settings -->
+        <section id="adjustments-panel">
+            <h2>Settings</h2>
+
+            <!-- Brightness control -->
+            <label for="brightness">Brightness</label>
+            <input type="range" id="brightness" min="0" max="100" value="50" oninput="changeBrightness(this.value)">
+            <p>Current Brightness: <span id="brightness-level">50</span>%</p>
+
+            <!-- Volume control -->
+            <label for="volume">Volume</label>
+            <input type="range" id="volume" min="0" max="100" value="50" oninput="changeVolume(this.value)">
+            <p>Current Volume: <span id="volume-level">50</span>%</p>
+
+            <!-- Rename device -->
+            <h3>Rename</h3>
+            <input type="text" id="rename-input" placeholder="New name...">
+            <button onclick="renameDevice()">Rename Device</button>
+        </section>
+
+        <!-- Device details panel -->
+        <section id="device-info-panel">
+            <h2>About the Device</h2>
+            <ul>
+                <li><strong>Model:</strong> Smart Device 1</li>
+                <li><strong>Maker:</strong> SmartTech Corp</li>
+                <li><strong>Version:</strong> 1.0.0</li>
+                <li><strong>Warranty:</strong> Active</li>
+                <li><strong>Updated:</strong> <span id="last-updated">Never</span></li>
+            </ul>
+        </section>
+
+        <!-- Logging section -->
+        <section id="log-history">
+            <h2>Logs</h2>
+            <ul id="log-list">
+                <!-- Entries will be added here -->
+            </ul>
+        </section>
+
+        <!-- Feedback area -->
+        <section id="feedback-section">
+            <h2>We value your feedback</h2>
+            <textarea id="feedback" rows="4" cols="50" placeholder="Share your thoughts..."></textarea><br>
+            <button onclick="submitFeedback()">Send</button>
+            <p id="feedback-message"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Smart Panel</p>
+    </footer>
+
+    <!-- Chart.js for dashboard visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    // Small delay to simulate real operations
+    const OPERATION_DELAY_MS = 2000;
+
+    // Device class (maybe should break this into separate file later)
+    class Device {
+        constructor(name) {
+            this.name = name;
+            this.status = 'Idle';  // Could be Success, Failed, etc.
+            this.health = 100;
+            this.power = true;
+            this.history = [];
+        }
+
+        async operate() {
+            if (!this.power) {
+                Logger.log(`${this.name} is turned off!`, 'error');
+                return;
+            }
+
+            this.updateStatus('Operating');
+            Logger.log(`Trying to operate ${this.name}`, 'info');
+
+            try {
+                await this.simulateOperation();
+                this.updateStatus('Success');
+                Logger.log(`${this.name} completed task.`, 'success');
+            } catch (err) {
+                this.updateStatus('Failed');
+                Logger.log(`${this.name} failed: ${err}`, 'error');
+            }
+        }
+
+        updateStatus(newStatus) {
+            this.status = newStatus;
+            this.history.push({ event: newStatus, time: new Date() });
+
+            UI.updateDeviceStatus(this.name, this.status, this.health, this.power);
+            UI.addLog(`Status changed to ${newStatus}`, 'info');
+        }
+
+        simulateOperation() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    Math.random() > 0.2 ? resolve() : reject("Something went wrong!");
+                }, OPERATION_DELAY_MS);
+            });
+        }
+
+        togglePower() {
+            this.power = !this.power;
+            Logger.log(`${this.name} turned ${this.power ? 'ON' : 'OFF'}`, 'info');
+            UI.updateDeviceStatus(this.name, this.status, this.health, this.power);
+        }
+
+        // Other device functions omitted for brevity...
+    }
+
+    // UI handler
+    const UI = (() => {
+        const logEl = document.getElementById('log-list');
+
+        function updateDeviceStatus(name, status, health, power) {
+            // Could update DOM, currently just logs
+        }
+
+        function addLog(msg, type = 'info') {
+            const item = document.createElement('li');
+            item.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            item.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            logEl.appendChild(item);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        return {
+            updateDeviceStatus,
+            addLog
+        };
+    })();
+
+    // Logger helper
+    const Logger = (() => {
+        function log(msg, kind = 'info') {
+            console[kind === 'error' ? 'error' : 'log'](`[${kind.toUpperCase()}] ${msg}`);
+            UI.addLog(msg, kind);
+        }
+        return { log };
+    })();
+
+    // Feedback submission
+    function submitFeedback() {
+        const input = document.getElementById('feedback');
+        const message = input.value.trim();
+        if (!message) return alert("Don't leave feedback blank!");
+
+        Logger.log(`Feedback received: ${message}`, 'info');
+        input.value = '';
+        document.getElementById('feedback-message').textContent = "Thanks for your input!";
+    }
+
+    // Just renaming handler
+    function renameDevice() {
+        const name = document.getElementById('rename-input').value.trim();
+        if (!name) return alert("Name can't be empty!");
+        Logger.log(`Device renamed to "${name}"`, 'info');
+    }
+
+    // Create device instances (names could maybe be dynamic later)
+    const devices = {
+        'Light': new Device('Light'),
+        'Thermostat': new Device('Thermostat'),
+        'Camera': new Device('Camera')
+    };
+
+    // Dashboard section
+    const Dashboard = (() => {
+        let chart, ctx;
+
+        function init() {
+            const section = document.createElement('section');
+            section.innerHTML = `
+                <h2>System Overview</h2>
+                <canvas id="statusChart" style="max-width: 400px;"></canvas>
+                <p id="dashboardStats"></p>
+            `;
+            document.querySelector('main').appendChild(section);
+
+            ctx = document.getElementById('statusChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Success', 'Failed', 'Operating', 'Idle'],
+                    datasets: [{
+                        data: [0, 0, 0, 0],
+                        backgroundColor: ['green', 'red', 'blue', 'gray']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            update();
+        }
+
+        function update() {
+            const summary = { Success: 0, Failed: 0, Operating: 0, Idle: 0 };
+            Object.values(devices).forEach(d => summary[d.status] = (summary[d.status] || 0) + 1);
+
+            chart.data.datasets[0].data = [summary.Success, summary.Failed, summary.Operating, summary.Idle];
+            chart.update();
+
+            const avgHealth = (
+                Object.values(devices).reduce((sum, d) => sum + d.health, 0) / Object.keys(devices).length
+            ).toFixed(1);
+
+            document.getElementById('dashboardStats').innerHTML = `
+                <strong>Avg Health:</strong> ${avgHealth}%<br>
+                <strong>Device Count:</strong> ${Object.keys(devices).length}
+            `;
+        }
+
+        return { init, update };
+    })();
+
+    Dashboard.init();
+
+    // Start degrading devices slowly
+    setInterval(() => {
+        Object.values(devices).forEach(d => {
+            if (d.power) {
+                d.health = Math.max(0, d.health - Math.floor(Math.random() * 5 + 1));
+                d.updateStatus(d.status); // Not the most efficient, but fine here
+            }
+        });
+    }, 30000);
+
+    </script>
+</body>
+</html>
+
+{% endblock %}

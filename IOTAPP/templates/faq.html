@@ -1,0 +1,108 @@
+
+{% extends "base.html" %}
+
+{% block title %}Welcome to SmartStuff{% endblock %}
+
+{% block content %}
+
+
+  <main id="device-security">
+    
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search security features..." onkeyup="filterFeatures()">
+    </div>
+
+    <section class="security-info">
+      <h2>Security Features</h2>
+      <ul id="feature-list">
+        <li>Two-factor Authentication <button onclick="toggleFeature('Two-factor Authentication', this)">Details</button></li>
+        <li>End-to-End Encryption <button onclick="toggleFeature('End-to-End Encryption', this)">Details</button></li>
+        <li>Regular Security Updates <button onclick="toggleFeature('Regular Security Updates', this)">Details</button></li>
+        <li>Device Locking Mechanism <button onclick="toggleFeature('Device Locking Mechanism', this)">Details</button></li>
+        <li>Intruder Alert System <button onclick="toggleFeature('Intruder Alert System', this)">Details</button></li>
+      </ul>
+    </section>
+
+    <section class="security-details">
+      <h2>Security Feature Details</h2>
+      <p id="feature-details" title="Click to copy!">Click on "Details" to see more information.</p>
+    </section>
+  </main>
+
+
+
+<script>
+  // Super Cool JavaScript
+  const featureDescriptions = {
+    "Two-factor Authentication": "Adds an extra layer of security by requiring a second form of identification beyond just a password.",
+    "End-to-End Encryption": "Ensures that only you and the person you're communicating with can read what is sent.",
+    "Regular Security Updates": "Provides continuous protection against the latest threats and vulnerabilities.",
+    "Device Locking Mechanism": "Automatically locks your device when inactive to prevent unauthorized access.",
+    "Intruder Alert System": "Detects suspicious activities and alerts the user immediately for further action."
+  };
+
+  let activeButton = null;
+  let autoRotateInterval = null;
+
+  function toggleFeature(feature, button) {
+    const details = document.getElementById('feature-details');
+    
+    // Change details text
+    details.textContent = featureDescriptions[feature] || "Feature details not available.";
+    
+    // Animate text
+    details.classList.remove('show');
+    setTimeout(() => {
+      details.classList.add('show');
+    }, 10);
+
+    // Highlight selected button
+    if (activeButton) {
+      activeButton.style.background = '#4a90e2';
+    }
+    button.style.background = '#2c6bb2';
+    activeButton = button;
+
+    // Stop auto-rotation after manual interaction
+    clearInterval(autoRotateInterval);
+  }
+
+  function filterFeatures() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const items = document.querySelectorAll('#feature-list li');
+
+    items.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(input) ? 'flex' : 'none';
+    });
+  }
+
+  // Auto-rotate through features every 8 seconds
+  function startAutoRotate() {
+    const features = Object.keys(featureDescriptions);
+    let index = 0;
+
+    autoRotateInterval = setInterval(() => {
+      const feature = features[index];
+      toggleFeature(feature, document.querySelector(`#feature-list li:nth-child(${index + 1}) button`));
+      index = (index + 1) % features.length;
+    }, 8000);
+  }
+
+  // Copy feature details to clipboard when clicked
+  document.getElementById('feature-details').addEventListener('click', function() {
+    const text = this.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Feature details copied to clipboard!');
+    }).catch(err => {
+      alert('Failed to copy!');
+    });
+  });
+
+  // Start auto-rotation on load
+  window.onload = startAutoRotate;
+</script>
+
+</body>
+</html>
+{% endblock %}

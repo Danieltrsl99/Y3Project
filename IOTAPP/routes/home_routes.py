@@ -27,6 +27,25 @@ def home():
     else:
         flash('You need to log in first.')
         return redirect(url_for('auth.login'))
+    
+@home_bp.route('/faq')
+def faq():
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        ip_address = get_public_ip()  # Use get_public_ip() to get the correct IP
+        log_activity(user.username, 'FAQ', ip_address)
+    return render_template('faq.html')
+
+@home_bp.route('/od')
+def od():
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        ip_address = get_public_ip()  # Use get_public_ip() to get the correct IP
+        log_activity(user.username, 'FAQ', ip_address)
+    return render_template('od.html')
+
+
+
 
 @home_bp.route('/scan_wifi', methods=['POST'])
 def scan_wifi():
