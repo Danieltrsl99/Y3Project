@@ -29,11 +29,12 @@ CREATE TABLE IF NOT EXISTS access_log (
     ip_address TEXT
 );
 
--- user devices table to store connected Bluetooth devices
-CREATE TABLE IF NOT EXISTS UserDevices (
+CREATE TABLE IF NOT EXISTS devices (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    device_name TEXT NOT NULL,
-    device_id TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
+    tuya_device_id TEXT NOT NULL UNIQUE, -- Tuya device ID
+    name TEXT NOT NULL, -- Device name
+    assigned_user_id INTEGER, -- User ID the device is assigned to
+    FOREIGN KEY (assigned_user_id) REFERENCES User (id) ON DELETE SET NULL
 );
+
+

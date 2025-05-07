@@ -1,0 +1,22 @@
+{}<!-- filepath: c:\Users\Daniel\Desktop\Project\Y3Project\Y3Project\IOTAPP\templates\dashboard.html -->
+{% extends "base_profile.html" %}
+
+{% block title %}Welcome to SmartStuff{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    {% for device in devices %}
+    <div class="device-box">
+        <div class="device-name">{{ device['name'] }}</div>
+        <form method="POST" action="{{ url_for('dashboard.control_device_route', device_id=device['id']) }}">
+
+        <!-- Claim Button -->
+        <form method="POST" action="{{ url_for('dashboard.claim_device') }}">
+            <input type="hidden" name="device_id" value="{{ device['id'] }}">
+            <input type="hidden" name="device_name" value="{{ device['name'] }}">
+            <button type="submit" class="btn btn-primary">Claim</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

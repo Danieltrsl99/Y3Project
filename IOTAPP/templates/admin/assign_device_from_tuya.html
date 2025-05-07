@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Device from Tuya{% endblock %}
+
+{% block content %}
+<div class="container_home">
+    <h1>Assign Device from Tuya</h1>
+    {% if devices %}
+    <form method="POST" action="{{ url_for('admin.assign_device_from_tuya') }}">
+        <div class="form-group">
+            <label for="device_id">Select Device</label>
+            <select id="device_id" name="device_id" class="form-control" required>
+                <option value="" disabled selected>Select a device</option>
+                {% for device in devices %}
+                <option value="{{ device['id'] }}">{{ device['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="user_id">Assign to User</label>
+            <select id="user_id" name="user_id" class="form-control" required>
+                <option value="" disabled selected>Select a user</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Assign Device</button>
+    </form>
+    {% else %}
+    <p>No devices available to assign.</p>
+    {% endif %}
+</div>
+{% endblock %}

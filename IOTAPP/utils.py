@@ -29,38 +29,3 @@ def log_page_access(username, page, ip_address):
     activity = Activity(username=username, action=f"Visited {page} Page", ip_address=ip_address)
     db.session.add(activity)
     db.session.commit()
-
-def log_bluetooth_device(username, device_name, device_id, ip_address):
-    """
-    Logs a Bluetooth device detected by the user.
-    """
-    activity = Activity(username=username, action=f"Detected Bluetooth Device: {device_name} (ID: {device_id})", ip_address=ip_address)
-    db.session.add(activity)
-    db.session.commit()
-
-def scan_wifi_networks():
-    wifi = PyWiFi()
-    interfaces = wifi.interfaces()
-    if not interfaces:
-        return []
-    iface = interfaces[0]
-    iface.scan()
-    scan_results = iface.scan_results()
-    networks = []
-    for network in scan_results:
-        networks.append({
-            'ssid': network.ssid,
-            'bssid': network.bssid,
-            'signal': network.signal,
-            'frequency': network.freq
-        })
-    return networks
-
-def scan_smart_devices():
-    target_ip = get_public_ip()  # Change this to your network's IP range
-    arp = ARP(pdst=target_ip)
-    ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-    packet = ether/arp
-    result = srp(packet, timeout=3, verbose=0)[0]
-    devices = [{'ip': received.psrc, 'mac': received.hwsrc} for sent, received in result]
-    return devices

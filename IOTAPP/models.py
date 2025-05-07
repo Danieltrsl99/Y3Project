@@ -12,7 +12,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(80), nullable=False, default='User')
-    devices = db.relationship('UserDevices', backref='user', lazy=True)
+    
 
 # Activity log model
 class Activity(db.Model):
@@ -29,12 +29,7 @@ class AccessLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     ip_address = db.Column(db.String(120))
 
-# UserDevices model
-class UserDevices(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    device_name = db.Column(db.String(120), nullable=False)
-    device_id = db.Column(db.String(120), nullable=False)
+# UserDevices mode
 
 # Initialize the database
 def init_db(app):
