@@ -96,7 +96,8 @@ def set_brightness(device_id, brightness):
 
 def set_color(device_id, red, green, blue):
     """Set the color of the device."""
-    # Convert RGB to HSV to work with most Tuya devices
+
+    # Convert RGB to HSV format to work with most Tuya app 
     r, g, b = red / 255.0, green / 255.0, blue / 255.0
     max_c = max(r, g, b)
     min_c = min(r, g, b)

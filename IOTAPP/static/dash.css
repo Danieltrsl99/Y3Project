@@ -418,7 +418,7 @@ body {
     border-radius: 5px;
     margin-top: 10px;
 }
-/* Pagination buttons */
+
 .pagination a, .pagination span {
     display: inline-block;
     padding: 8px 12px;
@@ -432,7 +432,7 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Active page */
+
 .pagination span {
     font-weight: bold;
     color: #fff;
@@ -440,13 +440,13 @@ body {
     border-color: #007bff;
 }
 
-/* Hover effect */
+
 .pagination a:hover {
     background-color: #e9ecef;
     color: #0056b3;
 }
 
-/* Disabled buttons */
+
 .pagination a.disabled {
     pointer-events: none;
     color: #6c757d;
@@ -454,7 +454,7 @@ body {
     border-color: #dee2e6;
 }
 
-/* Center the pagination controls */
+
 .pagination {
     display: flex;
     justify-content: center;

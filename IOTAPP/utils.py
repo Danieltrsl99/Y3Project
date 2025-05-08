@@ -1,6 +1,4 @@
 import requests
-from scapy.all import ARP, Ether, srp
-from pywifi import PyWiFi
 from models import db, Activity, AccessLog
 
 def get_public_ip():

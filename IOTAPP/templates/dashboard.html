@@ -10,13 +10,13 @@
         <div class="device-box">
             <div class="device-name">{{ device['name'] }}</div>
             <form method="POST" action="{{ url_for('dashboard.control_device_route', device_id=device['id']) }}">
-                <!-- Color Picker -->
+                <!-- Color Changer -->
                 <div class="color-picker">
                     <label for="color-{{ device['id'] }}">Pick a Color</label>
                     <input type="color" id="color-{{ device['id'] }}" name="color" value="{{ device['current_color'] }}">
                 </div>
 
-                <!-- Brightness Slider -->
+                <!-- Brightness adjuster -->
                 <div class="brightness-slider">
                     <label for="brightness-{{ device['id'] }}">Brightness</label>
                     <input type="range" id="brightness-{{ device['id'] }}" name="brightness" min="0" max="100" 
@@ -37,7 +37,7 @@
     {% endif %}
 </div>
 
-<!-- Pagination Controls -->
+<!-- Next page  -->
 <div class="pagination">
     {% if pagination.has_prev %}
     <a href="{{ url_for('dashboard.dashboard', page=pagination.prev_num) }}" class="btn btn-primary">Previous</a>

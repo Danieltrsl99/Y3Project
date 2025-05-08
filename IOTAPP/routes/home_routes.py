@@ -8,7 +8,7 @@ home_bp = Blueprint('home', __name__)
 def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
-        ip_address = get_public_ip()  # Use get_public_ip() to get the correct IP
+        ip_address = get_public_ip()  
         log_activity(user.username, 'Index', ip_address)
     return render_template('index.html')
 
@@ -17,9 +17,9 @@ def home():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
         if user:
-            ip_address = get_public_ip()  # Use get_public_ip() to get the correct IP
+            ip_address = get_public_ip()  
             log_activity(user.username, 'Home', ip_address)
-            return render_template('index.html', user=user)  # Correctly reference profile.html
+            return render_template('index.html', user=user)  
     else:
         flash('You need to log in first.')
         return redirect(url_for('auth.login'))

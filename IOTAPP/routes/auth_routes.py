@@ -12,12 +12,12 @@ def register():
         email = request.form['email'].strip()
         password = request.form['password']
 
-        # Validate inputs
+       
         if not username or not email or not password:
             flash('All fields are required.')
             return redirect(url_for('auth.register'))
 
-        # Check if username or email already exists
+        
         if User.query.filter_by(username=username).first():
             flash('Username already exists.')
             return redirect(url_for('auth.register'))
@@ -51,15 +51,15 @@ def login():
         password = request.form['password']
         ip_address = request.remote_addr
 
-        # Validate inputs
+     
         if not username or not password:
             flash('Username and password are required.')
             return redirect(url_for('auth.login'))
 
-        # Fetch user from the database
+       
         user = User.query.filter_by(username=username).first()
 
-        # Check if user exists and password is correct
+       
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
             session['user_role'] = user.role
@@ -76,11 +76,11 @@ def login():
 
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
-        if user:  # Ensure user exists before logging page access
+        if user:  
             ip_address = request.remote_addr
             log_page_access(user.username, 'Login', ip_address)
         else:
-            # Clear invalid session and redirect to login
+           
             session.clear()
             flash('Session is invalid. Please log in again.')
             return redirect(url_for('auth.login'))

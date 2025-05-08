@@ -18,6 +18,7 @@
                 <a href="{{ url_for('auth.logout') }}">Logout</a>
             {% else %}
                 <a href="{{ url_for('auth.login') }}">Login</a>
+                
                 <a href="{{ url_for('auth.register') }}">Register</a>
             {% endif %}
             {% if session['user_id'] == 1 %}
@@ -26,7 +27,7 @@
             <div class="dropdown">
                 <button class="dropbtn">&#9776;</button>
                 <div class="dropdown-content">
-                    <!-- Add links to other pages here -->
+                  
                     <a href="{{ url_for('home.index') }}">Home</a>
                     <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
                     
