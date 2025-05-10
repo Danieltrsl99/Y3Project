@@ -5,7 +5,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-
+#defines databse models for the app for user
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -14,7 +14,7 @@ class User(db.Model):
     role = db.Column(db.String(80), nullable=False, default='User')
     
 
-
+#for activity logs
 class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False)
@@ -22,14 +22,14 @@ class Activity(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     ip_address = db.Column(db.String(120))
 
-
+#for access logs
 class AccessLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     ip_address = db.Column(db.String(120))
 
-# make the database
+#initializes the database and creates the tables if their not there
 def init_db(app):
     db_path = os.path.join(os.path.dirname(__file__), 'database.db')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'

@@ -10,30 +10,35 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jaames/iro@5.5.3/dist/iro.min.css">
         {% block extra_styles %}{% endblock %}
     </head>
-<body>
-    <nav class="navbar">
-        <a href="{{ url_for('home.index') }}" class="navbar-title">
-            <h1>SmartStuff</h1>
-        </a>
-        <div class="nav-links">
-            <div class="nav-links">
-                {% if 'user_id' in session %}
-                    <a href="{{ url_for('auth.logout') }}">Logout</a>
-                {% else %}
+    <body>
+        <nav class="navbar">
+             <a href="{{ url_for('home.index') }}" class="navbar-title">
+               <h1>SmartStuff</h1>   
+            </a>
+           <div class="nav-links">
+                   {% if 'user_id' in session %}
+                     <a href="{{ url_for('auth.logout') }}">Logout</a>
+                      <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+                  <a href="{{ url_for('profile.profile') }}">Profile</a>
+                   {% else %}
                     <a href="{{ url_for('auth.login') }}">Login</a>
-                    <a href="{{ url_for('auth.register') }}">Register</a>
-                {% endif %}
-                {% if session['user_id'] == 1 %}
-                            <a href="{{ url_for('admin.admin_page') }}">Admin Panel</a>
-                        {% endif %}
-            <div class="dropdown">
-                <button class="dropbtn">&#9776;</button>
-                <div class="dropdown-content">
+                        
+                <a href="{{ url_for('auth.register') }}">Register</a>
+              {% endif %}
+             {% if session['user_id'] == 1 %}
+                          <a href="{{ url_for('admin.admin_page') }}">Admin Panel</a>
+                     {% endif %}
+        <div class="dropdown">
+             <button class="dropbtn">&#9776;</button>
+             <div class="dropdown-content">
+                          
                     <a href="{{ url_for('home.index') }}">Home</a>
-                    <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
-                    <a href="{{ url_for('profile.profile') }}">Profile</a>
-                    
-                </div>
+                    <a href="{{ url_for('home.passcheck') }}">Password Checker</a>
+                <a href="{{ url_for('home.faq') }}">FAQ</a>
+                           
+                            
+                           
+                        </div>
             </div>
         </div>
     </nav>

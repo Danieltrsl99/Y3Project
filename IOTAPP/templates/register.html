@@ -8,14 +8,19 @@
 
 {% block content %}
 <div class="container_login">
-    <h1>Register</h1>
-    <form action="{{ url_for('auth.register') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <div>
+            <label for="username">Username:</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            {{ form.email }}
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            {{ form.password }}
+        </div>
         <button type="submit">Register</button>
     </form>
 </div>

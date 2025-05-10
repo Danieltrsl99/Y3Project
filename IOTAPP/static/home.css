@@ -1,6 +1,6 @@
 body {
-    background-color: #1a1a2e;
-    color: #ffffff;
+    background-color: #1a1a2e !important;
+    color: #ffffff !important;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -483,4 +483,184 @@ td {
     color: #6c757d;
     background-color: #f8f9fa;
     border-color: #dee2e6;
+}
+
+.password-checker-container {
+    max-width: 500px;
+    margin: 100px auto; 
+    text-align: center;
+    background-color: #1f4068;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.password-checker-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+
+.password-checker-disclaimer {
+    font-size: 0.9rem;
+    color: #cccccc;
+    margin-bottom: 20px;
+}
+
+
+.password-checker-container .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.progress {
+    height: 25px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+
+#strength-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+
+.form-check-label {
+    font-size: 0.9rem;
+    color: #ffffff;
+}
+
+
+.bg-danger {
+    background-color: #dc3545 !important; 
+}
+
+.bg-warning {
+    background-color: #ffc107 !important; /
+}
+
+.bg-success {
+    background-color: #28a745 !important; 
+}
+
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #1f4068; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #ffffff; 
+}
+
+.faq-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.faq-accordion .faq-item {
+    margin-bottom: 10px;
+}
+
+.faq-header {
+    background-color: #162447;
+    border-radius: 5px;
+}
+
+.faq-button {
+    width: 100%;
+    background-color: #1f4068;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.faq-button:hover {
+    background-color: #162447;
+}
+
+.faq-collapse {
+    background-color: #162447;
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+}
+
+.faq-body ul {
+    padding-left: 20px;
+}
+
+.faq-body li {
+    margin-bottom: 5px;
+}
+
+.control-buttons button {
+    background-color: #1f4068;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.control-buttons button:hover {
+    background-color: #162447;
+}
+
+
+.color-picker {
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+}
+
+
+.brightness-slider label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.brightness-slider input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.control-buttons button {
+    background-color: #1f4068;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.control-buttons button:hover {
+    background-color: #162447;
 }

@@ -1,37 +1,35 @@
-from flask import Blueprint, render_template, session, redirect, url_for, flash, request
-from models import User, Activity, AccessLog, db 
-from utils import log_activity, get_public_ip
-from tuya_utils import list_devices  
-from sqlalchemy.sql import text  
-from routes.tuya_routes import list_devices 
+from flask import Blueprint, render_template, session, redirect, url_for, request
+from models import db, User, Activity, AccessLog
+from utils import log_activity, getIP
+from tuya_utils import devicelist
+from sqlalchemy.sql import text
+from werkzeug.security import generate_password_hash, check_password_hash
 
-admin_bp = Blueprint('admin', __name__)
+adminblue = Blueprint('admin', __name__)
 
-@admin_bp.route('/admin_page')
+@adminblue.route('/admin_page')
 def admin_page():
     if 'user_id' in session and session.get('user_role') == 'Admin':
         user = User.query.get(session['user_id'])
-        ip_address = get_public_ip()  # Use get_public_ip() to get the correct IP
+        ip_address = getIP()
         log_activity(user.username, 'Admin Page', ip_address)
         users = User.query.all()
         return render_template('admin/admin.html', users=users)
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
 
-@admin_bp.route('/view_activity')
+@adminblue.route('/view_activity')#lets admin view activity accross the app
 def view_activity():
     if 'user_id' in session and session.get('user_role') == 'Admin':
-        user = User.query.get(session['user_id']) 
-        ip_address = get_public_ip()  
-        log_activity(user.username, 'View Activity', ip_address) 
+        user = User.query.get(session['user_id'])
+        ip_address = getIP()
+        log_activity(user.username, 'View Activity', ip_address)
 
-   
-        page = request.args.get('page', 1, type=int)  # Get the current page number 
-        per_page = 25 
+        page = request.args.get('page', 1, type=int)
+        per_page = 25
         activities = Activity.query.paginate(page=page, per_page=per_page)
 
-        columns = ['ID', 'Username', 'Action', 'Timestamp', 'IP Address']
+        columns = ['ID', 'Username', 'Action', 'Timestamp', 'IP Address']#records this data to logs
         data = [[activity.id, activity.username, activity.action, activity.timestamp, activity.ip_address] for activity in activities.items]
 
         return render_template(
@@ -41,17 +39,15 @@ def view_activity():
             pagination=activities
         )
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
 
-@admin_bp.route('/view_access_log')
+@adminblue.route('/view_access_log') #lets admin view attempts to log in 
 def view_access_log():
     if 'user_id' in session and session.get('user_role') == 'Admin':
-        user = User.query.get(session['user_id'])  
-        ip_address = get_public_ip()  
+        user = User.query.get(session['user_id'])
+        ip_address = getIP()
         log_activity(user.username, 'View Access', ip_address)
 
-       
         page = request.args.get('page', 1, type=int)
         per_page = 25
         access_logs = AccessLog.query.paginate(page=page, per_page=per_page)
@@ -66,17 +62,15 @@ def view_access_log():
             pagination=access_logs
         )
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
 
-@admin_bp.route('/view_users')
+@adminblue.route('/view_users')#lets admin view users 
 def view_users():
     if 'user_id' in session and session.get('user_role') == 'Admin':
-        user = User.query.get(session['user_id'])  
-        ip_address = get_public_ip() 
+        user = User.query.get(session['user_id'])
+        ip_address = getIP()
         log_activity(user.username, 'View Users', ip_address)
 
-        
         page = request.args.get('page', 1, type=int)
         per_page = 25
         users = User.query.paginate(page=page, per_page=per_page)
@@ -91,71 +85,59 @@ def view_users():
             pagination=users
         )
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
-    
-@admin_bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+
+@adminblue.route('/edit_user/<int:user_id>', methods=['GET', 'POST']) #lets admin edit user details
 def edit_user(user_id):
     if 'user_id' in session and session.get('user_role') == 'Admin':
         user = User.query.get_or_404(user_id)
         if request.method == 'POST':
             user.username = request.form['username']
             user.email = request.form['email']
-            user.role = request.form['role'] 
+            user.role = request.form['role']
             db.session.commit()
-            flash('User updated successfully.')
-            return redirect(url_for('admin.view_users'))  
+            return redirect(url_for('admin.view_users'))
         return render_template('admin/edit_users.html', user=user)
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
 
-@admin_bp.route('/delete_user/<int:user_id>', methods=['POST'])
+@adminblue.route('/delete_user/<int:user_id>', methods=['POST'])#lets admin delete user
 def delete_user(user_id):
     if 'user_id' in session and session.get('user_role') == 'Admin':
         user_to_delete = User.query.get_or_404(user_id)
         db.session.delete(user_to_delete)
         db.session.commit()
-        flash('User deleted successfully.')
         return redirect(url_for('admin.view_users'))
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
 
-@admin_bp.route('/assign_device', methods=['GET'])
+@adminblue.route('/assign_device', methods=['GET'])#lets admin assign devices to users
 def assign_device():
     if 'user_id' in session and session.get('user_role') == 'Admin':
-        user = User.query.get(session['user_id']) 
-        ip_address = get_public_ip() 
-        log_activity(user.username, 'View Assign Device', ip_address)  
+        user = User.query.get(session['user_id'])
+        ip_address = getIP()
+        log_activity(user.username, 'Assign Device', ip_address)
 
-     
         try:
-            devices = list_devices()  
-           
+            devices = devicelist() 
             for device in devices:
-                device['status'] = device.get('status', 'Unknown') 
-        except Exception as e:
-            flash(f"Error fetching devices: {str(e)}")
+                device['status'] = device.get('status', 'Unknown')
+        except Exception:
             devices = []
 
-        
         users = User.query.all()
 
         return render_template('admin/assign_device.html', devices=devices, users=users)
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
 
-
-@admin_bp.route('/view_device')
+@adminblue.route('/view_device') #lets admin view devices
 def view_device():
     if 'user_id' in session and session.get('user_role') == 'Admin':
-        user = User.query.get(session['user_id']) 
-        ip_address = get_public_ip()  
-        log_activity(user.username, 'View Devices', ip_address)  
+        user = User.query.get(session['user_id'])
+        ip_address = getIP()
+        log_activity(user.username, 'View Devices', ip_address)
 
- 
         page = request.args.get('page', 1, type=int)
         per_page = 25
         devices = db.session.execute(
@@ -166,7 +148,6 @@ def view_device():
             """)
         ).fetchall()
 
-      
         total_devices = len(devices)
         start = (page - 1) * per_page
         end = start + per_page
@@ -190,13 +171,11 @@ def view_device():
             }
         )
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
 
-@admin_bp.route('/remove_device/<int:device_id>', methods=['POST'])
+@adminblue.route('/remove_device/<int:device_id>', methods=['POST'])#lets admin remove devices from users 
 def remove_device(device_id):
     if 'user_id' in session and session.get('user_role') == 'Admin':
-   
         device_to_delete = db.session.execute(
             text("SELECT * FROM devices WHERE id = :device_id"),
             {"device_id": device_id}
@@ -208,62 +187,58 @@ def remove_device(device_id):
                 {"device_id": device_id}
             )
             db.session.commit()
-            flash('Device deleted successfully.')
-        else:
-            flash('Device not found.')
 
         return redirect(url_for('admin.view_device'))
     else:
-        flash('You do not have permission to perform this action.')
         return redirect(url_for('home.home'))
 
-@admin_bp.route('/assign_device_from_tuya', methods=['GET', 'POST'])
+@adminblue.route('/assign_device_from_tuya', methods=['GET', 'POST'])#lets admin assign devices
 def assign_device_from_tuya():
     if 'user_id' in session and session.get('user_role') == 'Admin':
         try:
-         
-            devices = list_devices()  
+            devices = devicelist()
 
-           
             assigned_devices = db.session.execute(
                 text("SELECT tuya_device_id FROM devices")
             ).fetchall()
             assigned_device_ids = {device.tuya_device_id for device in assigned_devices}
 
-            # hidws out already assigned devices
             available_devices = [
                 device for device in devices if device['id'] not in assigned_device_ids
             ]
 
-      
             users = User.query.all()
 
             if request.method == 'POST':
-                
                 device_id = request.form.get('device_id')
                 user_id = request.form.get('user_id')
+                password = request.form.get('password')
 
-                # finds the selected device name
-                device_name = next((device['name'] for device in devices if device['id'] == device_id), None)
-
-                if not device_name:
-                    flash('Invalid device selected.')
+                if not device_id or not user_id or not password:
                     return redirect(url_for('admin.assign_device_from_tuya'))
 
-                # Assign the device to the user
-                db.session.execute(
-                    text("INSERT INTO devices (tuya_device_id, name, assigned_user_id) VALUES (:device_id, :device_name, :user_id)"),
-                    {"device_id": device_id, "device_name": device_name, "user_id": user_id}
-                )
-                db.session.commit()
-                flash(f'Device "{device_name}" assigned successfully.')
+                device_name = next((device['name'] for device in devices if device['id'] == device_id), None)
+                if not device_name:
+                    return redirect(url_for('admin.assign_device_from_tuya'))
+
+                hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+
+                try:
+                    db.session.execute(
+                        text("""
+                            INSERT INTO devices (tuya_device_id, name, assigned_user_id, password)
+                            VALUES (:device_id, :device_name, :user_id, :password)
+                        """),
+                        {"device_id": device_id, "device_name": device_name, "user_id": user_id, "password": hashed_password}
+                    )
+                    db.session.commit()
+                except Exception:
+                    return redirect(url_for('admin.assign_device_from_tuya'))
 
                 return redirect(url_for('admin.assign_device_from_tuya'))
 
             return render_template('admin/assign_device_from_tuya.html', devices=available_devices, users=users)
-        except Exception as e:
-            flash(f"Error fetching devices or users: {str(e)}")
+        except Exception:
             return redirect(url_for('admin.admin_page'))
     else:
-        flash('You do not have permission to access this page.')
         return redirect(url_for('home.home'))
