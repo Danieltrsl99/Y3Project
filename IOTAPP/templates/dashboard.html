@@ -1,0 +1,125 @@
+
+{% extends "base_profile.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    {% if devices %}
+        {% for device in devices %}
+        <div class="device-box">
+            <div class="device-name">{{ device['name'] }}</div>
+
+            
+            <div class="color-picker">
+                <label for="color-{{ device['id'] }}">Pick a Color</label>
+                <input type="color" id="color-{{ device['id'] }}" name="color" 
+                       value="{{ device['current_color'] }}">
+            </div>
+
+            
+            <div class="form-group">
+                <label for="password-{{ device['id'] }}">Enter Device Password</label>
+                <input type="password" id="password-{{ device['id'] }}" name="password" required>
+            </div>
+
+            
+            <div class="brightness-slider">
+                <label for="brightness-{{ device['id'] }}">Brightness</label>
+                <input type="range" id="brightness-{{ device['id'] }}" name="brightness" min="0" max="100" 
+                       value="1"> 
+            </div>
+
+            
+            <div class="control-buttons">
+                   <button type="button" onclick="setDeviceSettings('{{ device['id'] }}')">Set</button>
+                <button type="button" onclick="changePowerState('{{ device['id'] }}', true)">Turn On</button>
+                <button type="button" onclick="changePowerState('{{ device['id'] }}', false)">Turn Off</button>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No devices found.</p>
+    {% endif %}
+</div>
+
+<script>
+    function setDeviceSettings(deviceId) { //gets data from elements 
+        const colorPicker = document.getElementById(`color-${deviceId}`);
+        const brightnessSlider = document.getElementById(`brightness-${deviceId}`);
+        const passwordInput = document.getElementById(`password-${deviceId}`);
+        const color = colorPicker.value;
+        const brightness = brightnessSlider.value;
+        const password = passwordInput.value;
+
+        const rgb = hexToRgb(color); 
+
+
+        fetch('/tuya/set_device_settings', {////sends post request to the endpoint 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                device_id: deviceId,
+                color: rgb,
+                brightness: brightness,
+                password: password,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {          
+            } else {  
+                alert(data.message); 
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function changePowerState(deviceId, state) {//gets data if device is on or off
+        const passwordInput = document.getElementById(`password-${deviceId}`);
+        const password = passwordInput.value;
+
+        
+        fetch('/tuya/change_power_state', {//sends post request to the endpoint 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                device_id: deviceId,
+                state: state,
+                password: password, 
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+            } else {
+                alert(data.message); 
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function hexToRgb(hex) {//converts hex to rgb 
+        const bigint = parseInt(hex.slice(1), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return [r, g, b];
+    }
+</script>
+
+
+<div class="pagination">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('dashboard.dashboard', page=pagination.prev_num) }}" class="btn btn-primary">Previous</a>
+    {% endif %}
+    <span>Page {{ pagination.page }} of {{ (pagination.total // pagination.per_page) + (1 if pagination.total % pagination.per_page > 0 else 0) }}</span>
+    {% if pagination.has_next %}
+    <a href="{{ url_for('dashboard.dashboard', page=pagination.next_num) }}" class="btn btn-primary">Next</a>
+    {% endif %}
+</div>
+{% endblock %}

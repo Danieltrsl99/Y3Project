@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Device from Tuya{% endblock %}
+
+{% block content %}
+<div class="container_home">
+    <h1>Assign Device from Tuya</h1>
+    <div class="dropdown">
+        <button class="dropbtn">Select Option</button>
+        <div class="dropdown-content">
+            <a href="{{ url_for('admin.view_activity') }}">Activity</a>
+            <a href="{{ url_for('admin.view_access_log') }}">Access Log</a>
+            <a href="{{ url_for('admin.view_users') }}">Users</a>
+            <a href="{{ url_for('admin.view_device') }}">Assigned Devices</a>
+            <a href="{{ url_for('admin.assign_device_from_tuya') }}">Assign Device</a>
+        </div>
+    </div>
+    {% if devices %}
+    <form method="POST" action="{{ url_for('admin.assign_device_from_tuya') }}">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Input</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label for="device_id">Select Device</label></td>
+                    <td>
+                        <select id="device_id" name="device_id" class="dropbtn" required>
+                            <option value="" disabled selected>Select a device</option>
+                            {% for device in devices %}
+                            <option value="{{ device['id'] }}">{{ device['name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="user_id">Assign to User</label></td>
+                    <td>
+                        <select id="user_id" name="user_id" class="dropbtn" required>
+                            <option value="" disabled selected>Select a user</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="password">Set Device Password</label></td>
+                    <td>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="control-buttons">
+            <button type="submit" class="buttons">Assign Device</button>
+        </div>
+    </form>
+    {% else %}
+    <p>No devices available to assign.</p>
+    {% endif %}
+</div>
+{% endblock %}

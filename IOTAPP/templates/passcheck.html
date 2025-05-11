@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Password Strength Checker{% endblock %}
+
+{% block content %}
+<div class=" password-checker-container">
+    <h1 class="password-checker-title">Password Strength Checker</h1>
+    <p class="password-checker-disclaimer">We do not store passwords checked here.</p>
+
+    <div class="form-group mt-4">
+        <label for="password" class="h5">Enter Password:</label>
+        <input type="password" id="password" class="form-control mt-2" placeholder="Enter your password" oninput="passstr()">
+        <div class="form-check mt-2">
+            <input type="checkbox" class="form-check-input" id="show-password" onclick="passvisibility()">
+            <label class="form-check-label" for="show-password">Show Password</label>
+        </div>
+    </div>
+
+    <div class="progress mt-4">
+        <div id="strength-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <p id="strength-text" class="mt-3 h5"></p>
+</div>
+
+<script>
+    function passstr() {
+        const password = document.getElementById('password').value;
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+
+        let strength = 0;
+
+        // Check password str
+        if (password.length >= 8) strength += 20; // minimum length
+        if (/[A-Z]/.test(password)) strength += 20; // uppere letter
+        if (/[a-z]/.test(password)) strength += 20; // lower letter
+        if (/[0-9]/.test(password)) strength += 20; // number
+        if (/[@$!%*?&#]/.test(password)) strength += 20; // special character
+
+        // Update the bar
+        strengthBar.style.width = strength + '%';
+        strengthBar.setAttribute('aria-valuenow', strength);
+
+        // colors cahneg based on strneght
+        if (strength <= 40) {
+            strengthBar.className = 'progress-bar bg-danger'; 
+            strengthText.textContent = 'Weak';
+        } else if (strength <= 80) {
+            strengthBar.className = 'progress-bar bg-warning'; 
+            strengthText.textContent = 'Medium';
+        } else {
+            strengthBar.className = 'progress-bar bg-success'; 
+            strengthText.textContent = 'Strong';
+        }
+    }
+
+    function passvisibility() { //enable to show password entered
+        const passwordField = document.getElementById('password');
+        const showPasswordCheckbox = document.getElementById('show-password');
+        passwordField.type = showPasswordCheckbox.checked ? 'text' : 'password';
+    }
+</script>
+{% endblock %}

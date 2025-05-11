@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to SmartStuff{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="btn-group">
+        <h1>Welcome to SmartStuff</h1>
+        <p>Create beautiful, customizable dashboards to monitor <br> and control all your smart home devices in one central place.</p>
+        {% if 'user_id' not in session %}
+            <a href="{{ url_for('auth.register') }}" class="btn">Register</a>
+            <a href="{{ url_for('auth.login') }}" class="btn">Login</a>
+        {% endif %}
+    </div>
+    <img src="{{ url_for('static', filename='DashDemo.png') }}" alt="SmartStuff Image">
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% block scripts %}{% endblock %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}SmartStuff{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5.5.3/dist/iro.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jaames/iro@5.5.3/dist/iro.min.css">
+        {% block extra_styles %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar">
+             <a href="{{ url_for('home.index') }}" class="navbar-title">
+               <h1>SmartStuff</h1>   
+            </a>
+           <div class="nav-links">
+                   {% if 'user_id' in session %}
+                     <a href="{{ url_for('auth.logout') }}">Logout</a>
+                      <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+                  <a href="{{ url_for('profile.profile') }}">Profile</a>
+                   {% else %}
+                    <a href="{{ url_for('auth.login') }}">Login</a>
+                        
+                <a href="{{ url_for('auth.register') }}">Register</a>
+              {% endif %}
+             {% if session['user_id'] == 1 %}
+                          <a href="{{ url_for('admin.admin_page') }}">Admin Panel</a>
+                     {% endif %}
+        <div class="dropdown">
+             <button class="dropbtn">&#9776;</button>
+             <div class="dropdown-content">
+                          
+                    <a href="{{ url_for('home.index') }}">Home</a>
+                    <a href="{{ url_for('home.passcheck') }}">Password Checker</a>
+                <a href="{{ url_for('home.faq') }}">FAQ</a>
+                           
+                            
+                           
+                        </div>
+            </div>
+        </div>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

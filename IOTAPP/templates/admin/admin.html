@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Page{% endblock %}
+
+
+
+{% block content %}
+<div class="container_home">
+    <h1>Logged in as Admin</h1>
+    <div class="dropdown">
+        <button class="dropbtn">Select Option</button>
+        <div class="dropdown-content">
+            <a href="{{ url_for('admin.view_activity') }}">Activity</a>
+<a href="{{ url_for('admin.view_access_log') }}">Access Log</a>
+<a href="{{ url_for('admin.view_users') }}">Users</a>
+<a href="{{ url_for('admin.view_device') }}">Assigned Devices</a>
+<a href="{{ url_for('admin.assign_device_from_tuya') }}">Assign Device</a>
+        </div>
+    </div>
+    <div id="display-section">
+        {% if data %}
+        <table>
+     <thead>
+     <tr>
+{% for column in columns %}
+ <th>{{ column }}</th>
+     {% endfor %}
+     {% if url_for('admin.view_users') in request.path %}
+<th>Edit</th>
+<th>Remove</th>
+ {% endif %}
+                
+{% if url_for('admin.view_device') in request.path %}
+   <th>Remove</th>
+                    
+     {% endif %}
+ </tr>
+  </thead>
+  <tbody>
+   {% for row in data %}
+  <tr>
+     {% for item in row %}
+    <td>{{ item }}</td>
+{% endfor %}
+  {% if url_for('admin.view_users') in request.path %}
+<td>
+  <div class="control-buttons">
+       <form action="{{ url_for('admin.edit_user', user_id=row[0]) }}" method="get" style="display:inline;">
+        <button type="submit" class="btn btn-primary">Edit</button>
+         </form>
+         </div>
+           </td>
+           
+      <td>
+        <div class="control-buttons">
+             <form action="{{ url_for('admin.delete_user', user_id=row[0]) }}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-danger">Remove</button>
+            </form>
+            </div>
+        </td>
+        
+  
+      {% endif %}
+               {% if url_for('admin.view_device') in request.path %}
+             <td>
+              <div class="control-buttons">
+           <form action="{{ url_for('admin.remove_device', device_id=row[0]) }}" method="post" style="display:inline;">
+             <button type="submit" class="btn btn-danger">Remove From User</button>
+             </form>
+             </div>
+               </td>
+     {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Next/ previous page  -->
+        <div class="pagination">
+  {% if pagination.has_prev %}
+ <a href="{{ url_for(request.endpoint, page=pagination.prev_num) }}" class="btn btn-primary">Previous</a>
+    {% endif %}
+ <span>Page {{ pagination.page }} of {{ pagination.pages }}</span>
+  {% if pagination.has_next %}
+<a href="{{ url_for(request.endpoint, page=pagination.next_num) }}" class="btn btn-primary">Next</a>
+{% endif %}
+</div>
+ {% endif %}
+    </div>
+</div>
+{% endblock %}
